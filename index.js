@@ -1,14 +1,17 @@
 'use strict'
+const express = require("express")
 const speedTest = require("speedtest-net");
 const Data = require("./models/testData")
 const mongoose = require('mongoose')
 const cron = require("node-cron")
+const routes = require("./routes/index")
 
 mongoose.connect('mongodb://localhost:27017/ispTestData', { useNewUrlParser: true });
 
+const app = express();
 //Offline puts more than one entry in db
 let outputCount = 0
-
+app.use("/", routes)
 cron.schedule('*/15 * * * *', () => {
   let runDate = new Date()
 
@@ -35,6 +38,6 @@ cron.schedule('*/15 * * * *', () => {
 
 });
 
-
-
+const port = 5000
+app.listen(port, () => console.log("Webserver listening on ", port))
 

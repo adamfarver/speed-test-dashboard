@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 
 var testData = new mongoose.Schema({
-	date: { type: String, default: Date.now },
+	date: { type: Number, default: Date.now },
 	data: Object
 
 })
