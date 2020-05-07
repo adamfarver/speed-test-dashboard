@@ -1,10 +1,7 @@
-/**
- * @format
- */
 'use strict'
 const express = require('express')
 const router = express.Router()
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
 const model = require('../models/testData')
 
 router.get('/', async (req, res) => {
