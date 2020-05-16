@@ -25,14 +25,14 @@ cron.schedule('*/15 * * * *', () => {
 	console.log('Running Test', runDate.toString())
 	const test = speedTest({ maxTime: 5000 })
 	// When test results finish, save to db.
-	test.on('data', data => {
+	test.on('data', (data) => {
 		if (!outputCount) {
 			const constructedData = new Data({ date: runDate, data })
 			constructedData.save().then(() => console.log(data))
 		}
 	})
 
-	test.on('error', err => {
+	test.on('error', (err) => {
 		if (!outputCount) {
 			const constructedData = new Data({ date: runDate, data: err })
 			constructedData.save().then(() => console.log('Saved'))
@@ -44,7 +44,7 @@ cron.schedule('*/15 * * * *', () => {
 
 app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
 	console.log('Client Connected')
 	// Aggregate info
 	setInterval(async () => {

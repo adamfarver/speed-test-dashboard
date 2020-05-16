@@ -6,7 +6,7 @@ class App extends Component {
 	constructor() {
 		super()
 		this.state = {
-			response: {},
+			response: { lastTest: { ul: 'waiting' } },
 			endpoint: 'http://127.0.0.1:5000',
 		}
 	}
@@ -15,8 +15,7 @@ class App extends Component {
 		const { endpoint } = this.state
 		//Very simply connect to the socket
 		const socket = socketIOClient(endpoint)
-		socket.on('data', data => this.setState({ response: data }))
-
+		socket.on('data', (data) => this.setState({ response: data }))
 		//socket.on('data', data => console.log(data))
 	}
 	render() {
@@ -24,22 +23,7 @@ class App extends Component {
 		return (
 			<>
 				<h1>All the Datas</h1>
-				<DataBlock
-					title="Last Test"
-					data={this.state.response.lastTest}
-				/>
-				<DataBlock
-					title="Last Hour"
-					data={this.state.response.lastHour}
-				/>
-				<DataBlock
-					title="Last Day"
-					data={this.state.response.lastDay}
-				/>
-				<DataBlock
-					title="Last Week"
-					data={this.state.response.lastWeek}
-				/>
+				<DataBlock title="LAST TEST - UP" data={response.lastTest.ul} />
 			</>
 		)
 	}
