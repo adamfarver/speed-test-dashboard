@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import socketIOClient from 'socket.io-client'
 import DataBlock from './components/DataBlock'
-
+// import style from './style'
 class App extends Component {
 	constructor() {
 		super()
@@ -23,7 +23,12 @@ class App extends Component {
 		return (
 			<>
 				<h1>All the Datas</h1>
-				<DataBlock title="LAST TEST - UP" data={response.lastTest.ul} />
+				<DataBlock
+					title="LAST TEST - UP"
+					data={response.lastTest.ul}
+					datatype="MB/"
+					time="SEC"
+				/>
 			</>
 		)
 	}

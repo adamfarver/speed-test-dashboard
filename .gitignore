@@ -1,2 +1,14 @@
+# General Things To Ignore.
+
+.gitignore
 node_modules
 .yarn/releases
+.prettierrc
+.babelrc
+.eslintrc.js
+
+
+
+
+# Build Files
+dist/
