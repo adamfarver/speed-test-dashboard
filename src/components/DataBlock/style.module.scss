@@ -1,22 +1,25 @@
 .container {
 	box-sizing: border-box;
-	// border: 5px black solid;
 	font-size: 1em;
 	display: block;
 	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
 		sans-serif;
 	padding: 0 1em;
-	margin: 0;
+	margin: 1em 0;
+	color: black;
+	width: 33%;
 
 	.top {
-		width: 150px;
+		width: 100%;
+		background-color: white;
 		border: 2px solid black;
 		padding-left: 1em;
 		border-bottom: 0;
 	}
 
 	.bottom {
-		width: 150px;
+		width: 100%;
+		background-color: white;
 		padding-left: 1em;
 		border: 2px solid black;
 	}

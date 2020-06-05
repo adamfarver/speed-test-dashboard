@@ -14,7 +14,7 @@ As configured, it will connect to speedtest.net and run a test every 15 minutes,
 -   MongoDB
 -   Git
 
-#### Startup Process - \*nix/MacOS terminal
+#### First-Time Startup Process - \*nix/MacOS terminal
 
 1. Clone Repo
 

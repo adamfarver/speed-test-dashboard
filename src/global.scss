@@ -1,4 +1,17 @@
 body {
-	background-color: blue;
+	margin: 0;
+	overflow: hidden;
+	height: 100vh;
+	background-image: url('/public/img/bg.png');
+	background-size: cover;
+	background-repeat: no-repeat;
 	color: white;
+	display: flex;
+	align-items: center;
+}
+.flexcontainer {
+	display: flex;
+	flex-flow: wrap;
+	width: 66vw;
+	height: 100%;
 }
