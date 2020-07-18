@@ -6,33 +6,45 @@ const speedTest = require('speedtest-net')
 const Data = require('./models/testData')
 const mongoose = require('mongoose')
 const cron = require('node-cron')
-//const routes = require('./routes/index')
-
+// Connect to DB.
 mongoose.connect('mongodb://localhost:27017/ispTestData', {
 	useNewUrlParser: true,
 })
-
+// Set Up express for delivery of public files.
 const app = express()
+//
 const server = http.createServer(app)
+// Setup for SocketIO. Allows for real-time communication to front-end.
 const io = socketIo(server)
+
+// Setup routes
+app.use(express.static('public'))
+app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
+
 //Offline puts more than one entry in db
 let outputCount = 0
-//app.use('/', routes)
-app.use(express.static('public'))
-cron.schedule('*/15 * * * *', () => {
+
+// Setup Cron Jobs
+cron.schedule('*/1 * * * *', () => {
 	let runDate = new Date()
 
 	console.log('Running Test', runDate.toString())
-	const test = speedTest({ maxTime: 5000 })
+	const test = speedTest({
+		maxTime: 5000,
+		acceptLicense: true,
+		acceptGdpr: true,
+		host: 'speedtest-avl-public.bloomip.com:8080',
+		serverId: '14480',
+	})
 	// When test results finish, save to db.
-	test.on('data', (data) => {
+	test.on('data', data => {
 		if (!outputCount) {
 			const constructedData = new Data({ date: runDate, data })
 			constructedData.save().then(() => console.log(data))
 		}
 	})
 
-	test.on('error', (err) => {
+	test.on('error', err => {
 		if (!outputCount) {
 			const constructedData = new Data({ date: runDate, data: err })
 			constructedData.save().then(() => console.log('Saved'))
@@ -42,26 +54,34 @@ cron.schedule('*/15 * * * *', () => {
 	})
 })
 
-app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
-
-io.on('connection', (socket) => {
+/* Communication to Front-End via SocketIO
+ * Function's job to aggegate information then send data every 10 seconds.
+ */
+io.on('connection', socket => {
 	console.log('Client Connected')
 	// Aggregate info
 	setInterval(async () => {
 		const data = {}
+		/*
+		 *
+		 * This section is the queries to get data to send.
+		 * Its basically rinse and repeat. Sort new data to the top of the return,
+		 * grab the number of tests that you need. Then, group, average, and round as
+		 * necessary. Using the project step to remove the _id as it is not needed.
+		 *
+		 * */
 		//get last test
 		const lastTest = await Data.aggregate([
 			{ $sort: { date: -1 } },
 			{ $limit: 1 },
 			{
-				$group: {
-					_id: null,
-					dl: { $avg: '$data.speeds.download' },
-					ul: { $avg: '$data.speeds.upload' },
-					ping: { $avg: '$data.server.ping' },
+				$project: {
+					_id: 0,
+					dl: '$data.speeds.download',
+					ul: '$data.speeds.upload',
+					ping: '$data.server.ping',
 				},
 			},
-			{ $project: { _id: 0, dl: 1, ul: 1, ping: 1 } },
 		])
 		data.lastTest = lastTest[0]
 		// get last hour
