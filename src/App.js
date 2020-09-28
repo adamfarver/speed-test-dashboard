@@ -20,16 +20,35 @@ class App extends Component {
 		const { endpoint } = this.state
 		//Very simply connect to the socket
 		const socket = socketIOClient(endpoint)
-		//		socket.on('data', data => this.setState({ response: data }))
-		socket.on('data', data => {
-			if (data.lastTest.dl === 'null') {
-				data.lastTest.ul = 'OFFLINE'
-				data.lastTest.dl = 'OFFLINE'
-				data.lastTest.ping = 'OFFLINE'
-			}
-			this.setState({ response: data })
-		})
+		socket.on('data', data => this.setState({ response: data }))
+		socket.on('disconnect', () =>
+			this.setState({
+				response: {
+					lastTest: {
+						ul: 'DISCONNECTED',
+						dl: 'DISCONNECTED',
+						ping: 'DISCONNECTED',
+					},
+					lastHour: {
+						ul: 'DISCONNECTED',
+						dl: 'DISCONNECTED',
+						ping: 'DISCONNECTED',
+					},
+					lastDay: {
+						ul: 'DISCONNECTED',
+						dl: 'DISCONNECTED',
+						ping: 'DISCONNECTED',
+					},
+					lastWeek: {
+						ul: 'DISCONNECTED',
+						dl: 'DISCONNECTED',
+						ping: 'DISCONNECTED',
+					},
+				},
+			})
+		)
 	}
+
 	render() {
 		const { response } = this.state
 		return (
